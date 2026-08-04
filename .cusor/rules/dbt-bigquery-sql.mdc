@@ -1,0 +1,27 @@
+---
+description: GoogleSQL standards and dbt data modeling rules for BigQuery
+globs: models/**/*.sql
+---
+# BigQuery & dbt SQL Engineering Conventions
+
+
+- **SQL Syntax:** Always use lowercase for SQL keywords (`select`, `from`, `where`, `left join`, `group by`).
+- **dbt Jinja References:**
+  - Always reference upstream staging models using `{{ ref('stg_...') }}`.
+  - Reference raw BigQuery source tables using `{{ source('source_name', 'table_name') }}`.
+  - Never hardcode GCP project IDs or dataset strings directly in SQL files.
+- **CTE Style:**
+  - Use Common Table Expressions (CTEs) for all data transformations.
+  - Structure: Import CTEs --> Transformation CTEs --> Final CTE (`select * from final`).
+- **Naming Conventions:**
+  - Staging models: `stg_<source>_<entity>.sql`
+  - Dimension tables: `dim_<entity>.sql`
+  - Fact tables: `fct_<entity>.sql`
+  - Column names: Use `snake_case` (e.g., `order_purchase_timestamp`).
+- **Primary & Foreign Keys:**
+  - Every model must specify a unique primary key named `<entity>_id` (e.g., `customer_id`, `order_id`).
+  - Fact models must include foreign keys matching the primary keys of referenced dimension models to preserve simple, natural joins.
+
+- **Security & Credential Protection:**
+  - **Never commit secrets:** Immediately update `.gitignore` to ignore `profiles.yml`, `.env`, GCP key files (`*.json`), and local target folders (`target/`, `dbt_packages/`).
+  - Never hardcode passwords, token strings, or GCP service account credentials in code.

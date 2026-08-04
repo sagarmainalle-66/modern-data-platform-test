@@ -1,0 +1,16 @@
+---
+alwaysApply: true
+---
+---
+description: Schema documentation, metadata, and data quality test standards for dbt YAML files
+globs: models/**/*.yml, models/**/*.yaml
+---
+# dbt Schema & Quality Assurance Conventions
+
+- **Formatting:** Use strictly 2-space indentation. Never use tabs.
+- **Required Model Documentation:**
+  - Every model (`stg_`, `dim_`, `fct_`) must have a clear `description` field explaining its business purpose.
+- **Primary Key Assertions:**
+  - The primary key (`<entity>_id`) of every model **must** include both `unique` and `not_null` test assertions.
+- **Foreign Key Integrity:**
+  - Foreign key columns in fact models (`fct_`) must include `relationships` tests pointing to the primary key of the target dimension model (`dim_`).
